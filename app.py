@@ -35,8 +35,12 @@ def upload_file():
         bin_path = os.path.join(temp_dir, 'data.bin')
         file.save(bin_path)
         
+        # Set execute permissions for the tachtig binary
+        os.chmod('./tachtig', 0o755)
         # Run tachtig
-        subprocess.run(['./tachtig', bin_path], cwd=temp_dir, check=True)
+        tachtig_path = os.path.abspath('./tachtig')  # Get absolute path to tachtig
+        subprocess.run([tachtig_path, bin_path], cwd=temp_dir, check=True)  # Use absolute path
+
         
         # Locate Sports2.dat
         folder_name = "0001000053503245"  # Adjust if tachtig creates a different folder
