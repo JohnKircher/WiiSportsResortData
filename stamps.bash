@@ -2,7 +2,7 @@
 
 
 
-# Allow tactig ussage
+# Allow tactig usage with a relative wii directory
 mkdir -p ./wii
 echo "ab01b9d8e1622b08afbad84dbfc2a55d" > ./wii/sd-key
 echo "216712e6aa1f689f95c5a22324dc6a98" > ./wii/sd-iv
@@ -14,18 +14,18 @@ xxd -r -p ./wii/md5-blanker ./wii/md5-blanker
 
 # Exits program if first argument is empty
 if [ -z "$1" ]; then
-	echo bash stamps.bash FILE
-	echo FILE should be: Sports2.dat OR data.bin
-	exit 1
-# Exits program if file does not exist.
+    echo bash stamps.bash FILE
+    echo FILE should be: Sports2.dat OR data.bin
+    exit 1
+# Exits program if file does not exist
 elif [ ! -f "$1" ]; then
-	    echo "$1: No such file"
-	    exit 2
+    echo "$1: No such file"
+    exit 2
 elif [ "${1: -3}" == "bin" ]; then
-tachtig "$1"
-hex=$(xxd -p -c 1000000 0001000053503245/Sports2.dat)
+    tachtig "$1"
+    hex=$(xxd -p -c 1000000 0001000053503245/Sports2.dat)
 else
-hex=$(xxd -p -c 1000000 $1)
+    hex=$(xxd -p -c 1000000 $1)
 fi
 
 # Convert date to human-readable format
