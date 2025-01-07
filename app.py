@@ -35,11 +35,11 @@ def upload_file():
         bin_path = os.path.join(temp_dir, 'data.bin')
         file.save(bin_path)
         
-        # Set up the wii directory
-        wii_dir = os.path.join(temp_dir, 'wii')
+        # Create ~/.wii directory
+        wii_dir = os.path.expanduser('~/.wii')
         os.makedirs(wii_dir, exist_ok=True)
         
-        # Write sd-key, sd-iv, and md5-blanker files
+        # Write sd-key, sd-iv, and md5-blanker files to ~/.wii
         with open(os.path.join(wii_dir, 'sd-key'), 'w') as f:
             f.write("ab01b9d8e1622b08afbad84dbfc2a55d")
         with open(os.path.join(wii_dir, 'sd-iv'), 'w') as f:
@@ -47,7 +47,7 @@ def upload_file():
         with open(os.path.join(wii_dir, 'md5-blanker'), 'w') as f:
             f.write("0e65378199be4517ab06ec22451a5793")
         
-        # Make tachtig executable and run it
+        # Run tachtig
         tachtig_path = os.path.abspath('./tachtig')
         os.chmod(tachtig_path, 0o755)
         subprocess.run([tachtig_path, bin_path], cwd=temp_dir, check=True)
