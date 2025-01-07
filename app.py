@@ -50,7 +50,9 @@ def upload_file():
             return "Sports2.dat not found", 500
         
         # Run stamps.bash
-        subprocess.run(['bash', './stamps.bash', sports2_path], cwd=temp_dir, check=True)
+        bash_script_path = os.path.abspath('./stamps.bash')
+        subprocess.run(['bash', bash_script_path, sports2_path], cwd=os.path.dirname(bash_script_path), check=True)
+
         
         # Locate output.html
         output_path = os.path.join(temp_dir, 'output.html')
