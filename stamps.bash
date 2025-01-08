@@ -273,8 +273,10 @@ do
     name=`hexToAscii ${hex:z:30}`
     countStamps=0  # Initialize/reset for the current player
 
-    if [[ ! "$name" =~ ^(miss\ ho|capt\.ja|unc)$ ]]; then
-        continue
+    #if [[ ! "$name" =~ ^(miss\ ho|capt\.ja|unc)$ ]]; then
+    if [ -z "$name" ]; then
+        #continue
+        break
     fi  
 
     # Add rows for each sport
