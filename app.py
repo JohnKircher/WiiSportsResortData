@@ -46,12 +46,18 @@ def upload_file():
             f.write(bytes.fromhex("0e65378199be4517ab06ec22451a5793"))
 
         # Run tachtig
-        tachtig_path = "/usr/local/bin/tachtig"  # Absolute path
+        tachtig_path = os.path.abspath('./tachtig')  # Use the relative path
+
+        os.chmod(tachtig_path, 0o755)
+
+        # Run tachtig
         try:
             subprocess.run([tachtig_path, bin_path], cwd=temp_dir, check=True)
         except subprocess.CalledProcessError as e:
             print(f"Error running tachtig: {e}")
             return f"Error running tachtig: {e}", 500
+        except FileNotFoundError:
+            return "tachtig executable not found", 500
 
         # Run stamps.bash
         bash_script_path = os.path.abspath('./stamps.bash')
