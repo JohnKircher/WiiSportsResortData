@@ -1,6 +1,6 @@
 #!/bin/bash       
 
-
+chmod +x ./xxd
 
 # Allow tactig usage with a relative wii directory
 mkdir -p ~/.wii
@@ -23,9 +23,9 @@ elif [ ! -f "$1" ]; then
     exit 2
 elif [ "${1: -3}" == "bin" ]; then
     tachtig "$1"
-    hex=$(xxd -p -c 1000000 0001000053503245/Sports2.dat)
+    hex=$(./xxd -p -c 1000000 0001000053503245/Sports2.dat)
 else
-    hex=$(xxd -p -c 1000000 $1)
+    hex=$(./xxd -p -c 1000000 $1)
 fi
 
 # Convert date to human-readable format
@@ -238,7 +238,7 @@ hexToAscii() {
 		elif [ "${input:$i:2}" == "00" ]; then
 			x+=" "
 		else
-	x+=$(echo ${input:$i:2} | xxd -r -p)
+	x+=$(echo ${input:$i:2} | ./xxd -r -p)
 		fi
 done
 	echo $x
