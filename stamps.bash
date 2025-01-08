@@ -1,5 +1,9 @@
 #!/bin/bash       
 
+if [ ! -f ./xxd ]; then
+    echo "Error: xxd binary not found!"
+    exit 1
+fi
 chmod +x ./xxd
 
 # Allow tactig usage with a relative wii directory
