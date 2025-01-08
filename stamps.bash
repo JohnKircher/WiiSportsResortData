@@ -3,13 +3,13 @@
 
 
 # Allow tactig usage with a relative wii directory
-mkdir -p ./wii
-echo "ab01b9d8e1622b08afbad84dbfc2a55d" > ./wii/sd-key
-echo "216712e6aa1f689f95c5a22324dc6a98" > ./wii/sd-iv
-echo "0e65378199be4517ab06ec22451a5793" > ./wii/md5-blanker
-xxd -r -p ./wii/sd-key ./wii/sd-key
-xxd -r -p ./wii/sd-iv ./wii/sd-iv
-xxd -r -p ./wii/md5-blanker ./wii/md5-blanker
+mkdir -p ~/.wii
+echo "ab01b9d8e1622b08afbad84dbfc2a55d" > ~/.wii/sd-key
+echo "216712e6aa1f689f95c5a22324dc6a98" > ~/.wii/sd-iv
+echo "0e65378199be4517ab06ec22451a5793" > ~/.wii/md5-blanker
+xxd -r -p ~/.wii/sd-key ~/.wii/sd-key
+xxd -r -p ~/.wii/sd-iv ~/.wii/sd-iv
+xxd -r -p ~/.wii/md5-blanker ~/.wii/md5-blanker
 
 
 # Exits program if first argument is empty
@@ -287,7 +287,7 @@ do
                 stamp=`convertDate $min`
                 echo "<td class=\"stamp-collected\"><span>Collected</span><span>$stamp</span></td>" >> output.html
                 countStamps=$((countStamps + 1))  # Increment countStamps
-                echo $countStamps  # Debugging output
+                #echo $countStamps  # Debugging output
             else
                 echo "<td class=\"stamp-none\"></td>" >> output.html
             fi
@@ -336,7 +336,7 @@ do
     echo "    </div>" >> output.html
 
     # Debugging output to verify countStamps
-    echo "OUTTHECOUNT: $countStamps" >&2
+    #echo "OUTTHECOUNT: $countStamps" >&2
 
     # Update offset for the next player
     interval=`doc df4`

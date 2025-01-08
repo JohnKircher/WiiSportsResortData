@@ -25,50 +25,52 @@ def index():
 def upload_file():
     if 'file' not in request.files:
         return "No file uploaded", 400
-    
+
     file = request.files['file']
     if file.filename == '':
         return "No file selected", 400
-    
+
     with tempfile.TemporaryDirectory() as temp_dir:
         # Save the uploaded file
         bin_path = os.path.join(temp_dir, 'data.bin')
         file.save(bin_path)
-        
-        # Create ~/.wii directory
+
+        # Ensure ~/.wii directory exists and write key files
         wii_dir = os.path.expanduser('~/.wii')
         os.makedirs(wii_dir, exist_ok=True)
-        
-        # Write sd-key, sd-iv, and md5-blanker files to ~/.wii
-        with open(os.path.join(wii_dir, 'sd-key'), 'w') as f:
-            f.write("ab01b9d8e1622b08afbad84dbfc2a55d")
-        with open(os.path.join(wii_dir, 'sd-iv'), 'w') as f:
-            f.write("216712e6aa1f689f95c5a22324dc6a98")
-        with open(os.path.join(wii_dir, 'md5-blanker'), 'w') as f:
-            f.write("0e65378199be4517ab06ec22451a5793")
-        
+        with open(os.path.join(wii_dir, 'sd-key'), 'wb') as f:
+            f.write(bytes.fromhex("ab01b9d8e1622b08afbad84dbfc2a55d"))
+        with open(os.path.join(wii_dir, 'sd-iv'), 'wb') as f:
+            f.write(bytes.fromhex("216712e6aa1f689f95c5a22324dc6a98"))
+        with open(os.path.join(wii_dir, 'md5-blanker'), 'wb') as f:
+            f.write(bytes.fromhex("0e65378199be4517ab06ec22451a5793"))
+
         # Run tachtig
-        tachtig_path = os.path.abspath('./tachtig')
-        os.chmod(tachtig_path, 0o755)
-        subprocess.run([tachtig_path, bin_path], cwd=temp_dir, check=True)
-        
-        # Locate Sports2.dat
-        folder_name = "0001000053503245"  # Adjust if tachtig creates a different folder
-        sports2_path = os.path.join(temp_dir, folder_name, 'Sports2.dat')
-        if not os.path.exists(sports2_path):
-            return "Sports2.dat not found", 500
-        
+        tachtig_path = "/usr/local/bin/tachtig"  # Absolute path
+        try:
+            subprocess.run([tachtig_path, bin_path], cwd=temp_dir, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Error running tachtig: {e}")
+            return f"Error running tachtig: {e}", 500
+
         # Run stamps.bash
         bash_script_path = os.path.abspath('./stamps.bash')
-        subprocess.run(['bash', bash_script_path, sports2_path], cwd=temp_dir, check=True)
-        
-        # Locate output.html
+        try:
+            subprocess.run(['bash', bash_script_path, os.path.join(temp_dir, "0001000053503245/Sports2.dat")],
+                           cwd=temp_dir, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Error running stamps.bash: {e}")
+            return f"Error running stamps.bash: {e}", 500
+
+        # Read the generated HTML file
         output_path = os.path.join(temp_dir, 'output.html')
         if not os.path.exists(output_path):
-            return "output.html not generated", 500
-        
-        # Serve the output file
-        return send_file(output_path, as_attachment=True)
+            return "output.html not found", 500
+        with open(output_path, 'r') as f:
+            html_content = f.read()
+
+        # Serve the HTML content as the response
+        return html_content
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
