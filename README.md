@@ -92,4 +92,4 @@ Thanks :)
 
 ## License
 
-This project is released under the **MIT License**.
+This project is released under the **MIT License**. See the `LICENSE` file for details.
