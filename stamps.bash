@@ -1,19 +1,15 @@
 #!/bin/bash       
 
-if [ ! -f ./xxd ]; then
-    echo "Error: xxd binary not found!"
-    exit 1
-fi
-chmod +x ./xxd
+
 
 # Allow tactig usage with a relative wii directory
 mkdir -p ~/.wii
 echo "ab01b9d8e1622b08afbad84dbfc2a55d" > ~/.wii/sd-key
 echo "216712e6aa1f689f95c5a22324dc6a98" > ~/.wii/sd-iv
 echo "0e65378199be4517ab06ec22451a5793" > ~/.wii/md5-blanker
-./xxd -r -p ~/.wii/sd-key ~/.wii/sd-key
-./xxd -r -p ~/.wii/sd-iv ~/.wii/sd-iv
-./xxd -r -p ~/.wii/md5-blanker ~/.wii/md5-blanker
+xxd -r -p ~/.wii/sd-key ~/.wii/sd-key
+xxd -r -p ~/.wii/sd-iv ~/.wii/sd-iv
+xxd -r -p ~/.wii/md5-blanker ~/.wii/md5-blanker
 
 
 # Exits program if first argument is empty
@@ -27,9 +23,9 @@ elif [ ! -f "$1" ]; then
     exit 2
 elif [ "${1: -3}" == "bin" ]; then
     tachtig "$1"
-    hex=$(./xxd -p -c 1000000 0001000053503245/Sports2.dat)
+    hex=$(xxd -p -c 1000000 0001000053503245/Sports2.dat)
 else
-    hex=$(./xxd -p -c 1000000 $1)
+    hex=$(xxd -p -c 1000000 $1)
 fi
 
 # Convert date to human-readable format
@@ -242,7 +238,7 @@ hexToAscii() {
 		elif [ "${input:$i:2}" == "00" ]; then
 			x+=" "
 		else
-	x+=$(echo ${input:$i:2} | ./xxd -r -p)
+	x+=$(echo ${input:$i:2} | xxd -r -p)
 		fi
 done
 	echo $x
